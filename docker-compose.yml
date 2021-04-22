@@ -1,0 +1,38 @@
+version: '3'
+
+
+services:
+  app:
+    image: nextcloud:apache
+    # deploy:
+    #   resources:
+    #     limits:
+    #       cpus: '2'
+          #memory: 500M
+    restart: always
+    ports:
+      - 8080:80
+    volumes:
+      - /data/nextcloud/data:/var/www/html/data
+    environment:
+      - SQLITE_DATABASE=nextcloud.db
+      - OVERWRITEPROTOCOL=https
+    networks:
+      - proxy-tier
+      - default
+
+  caddy:
+    image: caddy:2.3.0
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./caddy/data:/data
+      - ./caddy/config:/config
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile
+    networks:
+      - proxy-tier
+      - default
+
+networks:
+  proxy-tier:

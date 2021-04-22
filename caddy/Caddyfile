@@ -1,0 +1,5 @@
+exampleDomain.com
+
+reverse_proxy {
+  to app:80
+}
